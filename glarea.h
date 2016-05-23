@@ -16,6 +16,8 @@ namespace M
 // We derive from Gtk::Box because deriving from Gtk::GLArea results in weird
 // errors (g_value_take_object: assertion 'G_IS_OBJECT (v_object)' failed) and
 // add a Gtk::GLArea manually.
+// see https://mail.gnome.org/archives/gtkmm-list/2016-April/msg00023.html
+// TODO: Maybe we can change this now? And derive from GLArea directly?
 class GLArea : public Gtk::Box
 {
     public:
