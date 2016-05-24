@@ -18,6 +18,7 @@ namespace M
 // add a Gtk::GLArea manually.
 // see https://mail.gnome.org/archives/gtkmm-list/2016-April/msg00023.html
 // TODO: Maybe we can change this now? And derive from GLArea directly?
+//       ... waiting for gtkmm 3.20.2 or 3.20.3
 class GLArea : public Gtk::Box
 {
     public:
@@ -30,6 +31,7 @@ class GLArea : public Gtk::Box
         void set_button_event_y(const int &y);
 
     protected:
+        bool on_motion_notify_event(GdkEventMotion *event);
         bool on_button_press_event(GdkEventButton *event);
         bool on_button_release_event(GdkEventButton *event);
         bool on_key_press_event(GdkEventKey *event);
@@ -60,9 +62,10 @@ class GLArea : public Gtk::Box
         GLuint _shaderProgram;
         GLuint _matrixLocation;
 
-        int _buttonEventX;
-        int _buttonEventY;
+        float _previousX;
+        float _previousY;
 
+        bool _isButton3Pressed;
         bool _isKeyWPressed;
         bool _isKeyAPressed;
         bool _isKeySPressed;

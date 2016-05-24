@@ -7,6 +7,7 @@ GLArea::GLArea()
     : _points(0),
       _colors(0),
       _matrix(0),
+      _isButton3Pressed(false),
       _isKeyWPressed(false),
       _isKeyAPressed(false),
       _isKeySPressed(false),
@@ -15,12 +16,11 @@ GLArea::GLArea()
     set_has_window(false);
 
     // It is important to explicitely allow events on the GLArea!
-    _glArea.add_events(Gdk::BUTTON_PRESS_MASK
+    _glArea.add_events(Gdk::POINTER_MOTION_MASK
+            | Gdk::BUTTON_PRESS_MASK
             | Gdk::BUTTON_RELEASE_MASK
             | Gdk::KEY_PRESS_MASK
             | Gdk::KEY_RELEASE_MASK);
-
-    _glArea.set_auto_render(false);
 
     pack_end(_glArea, Gtk::PACK_EXPAND_WIDGET);
 
@@ -50,20 +50,32 @@ GLArea::~GLArea()
 {
 }
 
+bool GLArea::on_motion_notify_event(GdkEventMotion *event)
+{
+    if(_isButton3Pressed) {
+        float dx = event->x - _previousX;
+        float dy = event->y - _previousY;
+
+        _matrix[12] += 2 * dx / (float) _glArea.get_allocation().get_width();
+        _matrix[13] -= 2 * dy / (float) _glArea.get_allocation().get_height();
+    }
+
+    _previousX = event->x;
+    _previousY = event->y;
+}
+
 bool GLArea::on_button_press_event(GdkEventButton *event)
 {
-    std::cout
-        << "Button pressed: " << event->button
-        << " at (" << event->x << " " << event->y << ")"
-        << std::endl;
+    if(event->button == 3) {
+        _isButton3Pressed = true;
+    }
 }
 
 bool GLArea::on_button_release_event(GdkEventButton *event)
 {
-    std::cout
-        << "Button released: " << event->button
-        << " at (" << event->x << " " << event->y << ")"
-        << std::endl;
+    if(event->button == 3) {
+        _isButton3Pressed = false;
+    }
 }
 
 bool GLArea::on_key_press_event(GdkEventKey *event)
@@ -380,7 +392,22 @@ bool GLArea::render(const Glib::RefPtr<Gdk::GLContext> &)
 
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        draw();
+        //draw();
+        if(_isKeyWPressed) {
+            _matrix[13] += 0.01;
+        }
+        if(_isKeyAPressed) {
+            _matrix[12] -= 0.01;
+        }
+        if(_isKeySPressed) {
+            _matrix[13] -= 0.01;
+        }
+        if(_isKeyDPressed) {
+            _matrix[12] += 0.01;
+        }
+
+        glUniformMatrix4fv(_matrixLocation, 1, GL_FALSE, _matrix);
+        glDrawArrays(GL_TRIANGLES, 0, 3);
 
         return true;
     } catch(const Gdk::GLError &error) {
@@ -397,29 +424,12 @@ bool GLArea::render(const Glib::RefPtr<Gdk::GLContext> &)
 
 void GLArea::draw()
 {
-    if(_isKeyWPressed) {
-        _matrix[13] += 0.01;
-    }
-    if(_isKeyAPressed) {
-        _matrix[12] -= 0.01;
-    }
-    if(_isKeySPressed) {
-        _matrix[13] -= 0.01;
-    }
-    if(_isKeyDPressed) {
-        _matrix[12] += 0.01;
-    }
-
-    glUniformMatrix4fv(_matrixLocation, 1, GL_FALSE, _matrix);
-    glDrawArrays(GL_TRIANGLES, 0, 3);
 }
 
 gboolean GLArea::frame_callback(GtkWidget *widget, GdkFrameClock *frame_clock, gpointer data)
 {
     GLArea *self = (GLArea *) data;
-    //float frame_time = (float) gdk_frame_clock_get_frame_time(frame_clock);
-    //float time = frame_time / (float) G_USEC_PER_SEC;
-    self->_glArea.queue_render();
+    self->_glArea.queue_draw();
 
     return G_SOURCE_CONTINUE;
 }
