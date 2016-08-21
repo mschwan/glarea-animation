@@ -1,4 +1,5 @@
-CC = g++ -Wall
+CC = g++
+CFLAGS = -Wall
 SRC = glarea.cc log.cc main.cc window.cc
 RSRCDIR = resources
 RSRC = $(RSRCDIR)/shaders.gresource.xml
@@ -14,4 +15,5 @@ all:
 	$(CC) \
 		$(SRC) $(BIN)_gresource.cc \
 		-o $(BIN) \
+		$(CFLAGS) \
 		`pkg-config --cflags --libs $(PKG)`
