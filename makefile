@@ -6,6 +6,10 @@ RSRC = $(RSRCDIR)/shaders.gresource.xml
 BIN = virtual_camera
 PKG = gtkmm-3.0 epoxy
 
+ifeq ($(OS), Windows_NT)
+	CFLAGS += -mwindows
+endif
+
 all:
 	glib-compile-resources \
 		--generate-source \

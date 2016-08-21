@@ -8,7 +8,6 @@
 #include <gtkmm/box.h>
 #include <gtkmm/glarea.h>
 #include <epoxy/gl.h>
-#include <epoxy/glx.h>
 
 namespace M
 {
