@@ -1,4 +1,4 @@
-CC = g++
+CC = g++ -Wall
 SRC = glarea.cc log.cc main.cc window.cc
 RSRCDIR = resources
 RSRC = $(RSRCDIR)/shaders.gresource.xml

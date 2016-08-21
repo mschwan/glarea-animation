@@ -62,6 +62,8 @@ bool GLArea::on_motion_notify_event(GdkEventMotion *event)
 
     _previousX = event->x;
     _previousY = event->y;
+
+    return false;
 }
 
 bool GLArea::on_button_press_event(GdkEventButton *event)
@@ -69,6 +71,8 @@ bool GLArea::on_button_press_event(GdkEventButton *event)
     if(event->button == 3) {
         _isButton3Pressed = true;
     }
+
+    return false;
 }
 
 bool GLArea::on_button_release_event(GdkEventButton *event)
@@ -76,6 +80,8 @@ bool GLArea::on_button_release_event(GdkEventButton *event)
     if(event->button == 3) {
         _isButton3Pressed = false;
     }
+
+    return false;
 }
 
 bool GLArea::on_key_press_event(GdkEventKey *event)
@@ -95,6 +101,8 @@ bool GLArea::on_key_press_event(GdkEventKey *event)
     if(!_isKeyDPressed && event->keyval == GDK_KEY_d) {
         _isKeyDPressed = true;
     }
+
+    return false;
 }
 
 bool GLArea::on_key_release_event(GdkEventKey *event)
@@ -114,6 +122,8 @@ bool GLArea::on_key_release_event(GdkEventKey *event)
     if(_isKeyDPressed && event->keyval == GDK_KEY_d) {
         _isKeyDPressed = false;
     }
+
+    return false;
 }
 
 void GLArea::realize()
