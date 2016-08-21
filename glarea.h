@@ -60,7 +60,7 @@ class GLArea : public Gtk::Box
         GLuint _vboColors;
 
         GLuint _shaderProgram;
-        GLuint _matrixLocation;
+        GLint _matrixLocation;
 
         float _previousX;
         float _previousY;
