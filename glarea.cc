@@ -52,13 +52,36 @@ GLArea::~GLArea()
 
 bool GLArea::on_motion_notify_event(GdkEventMotion *event)
 {
+        auto d = Gdk::Display::get_default();
+        auto dm = d->get_default_seat();
+        auto pointer = dm->get_pointer();
+        /*pointer->grab(this->get_window(),
+                Gdk::OWNERSHIP_NONE,
+                true,
+                Gdk::BUTTON_PRESS_MASK,
+                event->time);
+        gtk_device_grab_add((GtkWidget *) this->gobj(),
+                pointer->gobj(),
+                false);*/
+
+        auto s = Gdk::Display::get_default()->get_default_screen();
     if(_isButton3Pressed) {
         float dx = event->x - _previousX;
         float dy = event->y - _previousY;
 
         _matrix[12] += 2 * dx / (float) _glArea.get_allocation().get_width();
         _matrix[13] -= 2 * dy / (float) _glArea.get_allocation().get_height();
+
+        int destX = 0;
+        int destY = 0;
+        this->translate_coordinates(*this->get_toplevel(),
+                0, 0,
+                destX, destY);
+        pointer->warp(s, _px, _py);
     }
+
+    std::cout << _px << " " << _py << std::endl;
+    pointer->get_position(_px, _py);
 
     _previousX = event->x;
     _previousY = event->y;
@@ -79,6 +102,13 @@ bool GLArea::on_button_release_event(GdkEventButton *event)
 {
     if(event->button == 3) {
         _isButton3Pressed = false;
+
+        auto d = Gdk::Display::get_default();
+        auto dm = d->get_default_seat();
+        auto pointer = dm->get_pointer();
+        /*gtk_device_grab_remove((GtkWidget *) this->gobj(),
+                pointer->gobj());
+        pointer->ungrab(event->time);*/
     }
 
     return false;

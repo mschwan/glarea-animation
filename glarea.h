@@ -9,6 +9,10 @@
 #include <gtkmm/glarea.h>
 #include <epoxy/gl.h>
 
+#include <gdkmm/seat.h>
+#include <gdkmm/display.h>
+#include <gdkmm/event.h>
+
 namespace M
 {
 
@@ -69,6 +73,9 @@ class GLArea : public Gtk::Box
         bool _isKeyAPressed;
         bool _isKeySPressed;
         bool _isKeyDPressed;
+
+        int _px;
+        int _py;
 };
 
 } // namespace M
