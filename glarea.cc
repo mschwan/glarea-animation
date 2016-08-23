@@ -17,6 +17,7 @@ GLArea::GLArea()
 
     // It is important to explicitely allow events on the GLArea!
     _glArea.add_events(Gdk::POINTER_MOTION_MASK
+            | Gdk::LEAVE_NOTIFY_MASK
             | Gdk::BUTTON_PRESS_MASK
             | Gdk::BUTTON_RELEASE_MASK
             | Gdk::KEY_PRESS_MASK
@@ -63,6 +64,12 @@ bool GLArea::on_motion_notify_event(GdkEventMotion *event)
     _previousX = event->x;
     _previousY = event->y;
 
+    return false;
+}
+
+bool GLArea::on_leave_notify_event(GdkEventCrossing *event)
+{
+    std::cout << "leave event" << std::endl;
     return false;
 }
 

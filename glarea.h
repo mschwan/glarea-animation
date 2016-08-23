@@ -31,6 +31,7 @@ class GLArea : public Gtk::Box
 
     protected:
         bool on_motion_notify_event(GdkEventMotion *event);
+        bool on_leave_notify_event(GdkEventCrossing *event);
         bool on_button_press_event(GdkEventButton *event);
         bool on_button_release_event(GdkEventButton *event);
         bool on_key_press_event(GdkEventKey *event);
